@@ -9,6 +9,7 @@ import {
   getDoc,
   updateDoc,
   arrayUnion,
+  deleteDoc,
 } from "firebase/firestore";
 import { addDays, format } from "date-fns";
 import { onAuthStateChanged } from "firebase/auth";
@@ -19,11 +20,6 @@ function SearchPage() {
   const [lostDate, setLostDate] = useState("");
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [questionnaire, setQuestionnaire] = useState([]);
-  const [answers, setAnswers] = useState({});
-  const [score, setScore] = useState(0);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [userId, setUserId] = useState(null);
   const [user, setUser] = useState(null);
   const [hasReported, setHasReported] = useState(false);
@@ -91,6 +87,27 @@ function SearchPage() {
     }
   };
 
+  const handleClaimApproval = async (itemId, lostItemId) => {
+    try {
+      const itemDocRef = doc(db, "barang_temuan", itemId);
+      await updateDoc(itemDocRef, {
+        claims: arrayUnion({
+          user_id: userId,
+          claim_date: new Date(),
+          status: "approved",
+        }),
+      });
+
+      // Remove the reported lost item
+      const lostItemDocRef = doc(db, "lost_items", lostItemId);
+      await deleteDoc(lostItemDocRef);
+
+      alert("Claim approved and lost item removed successfully.");
+    } catch (error) {
+      console.error("Error approving claim:", error);
+    }
+  };
+
   return (
     <div className="container mx-auto p-4">
       <NavbarComponent user={user} />
@@ -145,7 +162,7 @@ function SearchPage() {
           You must report a lost item before you can search. Please go to the
           report page to register your lost item.{" "}
           <a href="/report-lost-item" className="underline">
-            Report an lost item
+            Report a lost item
           </a>
         </p>
       )}
@@ -169,6 +186,14 @@ function SearchPage() {
                       className="mt-2 w-32 h-32 object-cover"
                     />
                   )}
+                  <button
+                    onClick={() =>
+                      handleClaimApproval(item.id, item.lostItemId)
+                    }
+                    className="mt-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                  >
+                    Approve Claim
+                  </button>
                 </li>
               ))
             ) : (

@@ -11,6 +11,7 @@ import SearchPage from "./SearchPage";
 import ReportPage from "./ReportPage";
 import HomePage from "./HomePage";
 import ReportLostItemPage from "./ReportLostItemPage";
+import ClaimHistoryPage from "./ClaimHistoryPage";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -89,7 +90,30 @@ function App() {
                 )
               }
             />
-            <Route path="/report-lost-item" element={<ReportLostItemPage />} />
+            <Route
+              path="/claims"
+              element={
+                user ? (
+                  <ClaimHistoryPage />
+                ) : (
+                  <div className="text-center text-gray-700 mt-4">
+                    <p>Please log in to access the page.</p>
+                  </div>
+                )
+              }
+            />
+            <Route
+              path="/report-lost-item"
+              element={
+                user ? (
+                  <ReportLostItemPage />
+                ) : (
+                  <div className="text-center text-gray-700 mt-4">
+                    <p>Please log in to access the page.</p>
+                  </div>
+                )
+              }
+            />
             <Route
               path="/report"
               element={
