@@ -65,7 +65,7 @@ function App() {
             onClick={login}
             className="px-6 py-3 bg-teal-600 text-white rounded-lg shadow-md hover:bg-teal-700"
           >
-            Login with Google
+            Login with Google Student Account
           </button>
         ) : (
           <button
