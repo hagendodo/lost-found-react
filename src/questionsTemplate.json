@@ -1,0 +1,130 @@
+{
+  "Dompet": [
+    {
+      "question": "Apakah merk dompet tersebut ?",
+      "options": ["Eiger", "Gucci", "Lainnya …"]
+    },
+    {
+      "question": "Apakah warna dompet tersebut ?",
+      "options": ["Hitam", "Putih", "Ungu", "Oren", "Lainnya …"]
+    },
+    {
+      "question": "Apa isi dompet tersebut ?",
+      "options": ["Uang", "KTP", "SIM", "Lainnya …"]
+    },
+    {
+      "question": "Jika ada KTP, sebutkan NIK KTP tersebut ?",
+      "options": ["900022", "Lainnya …"]
+    }
+  ],
+  "Tas": [
+    {
+      "question": "Apakah merk tas tersebut ?",
+      "options": ["Eiger", "Gucci", "Lainnya …"]
+    },
+    {
+      "question": "Apakah warna tas tersebut ?",
+      "options": ["Hitam", "Putih", "Ungu", "Oren", "Lainnya …"]
+    },
+    {
+      "question": "Apa isi tas tersebut ?",
+      "options": ["Laptop", "Buku", "Hp", "Lainnya …"]
+    },
+    {
+      "question": "Jika ada Laptop, merk laptop apa ?",
+      "options": ["Asus", "Lainnya…"]
+    }
+  ],
+  "Hp": [
+    {
+      "question": "Apakah merk hp tersebut ?",
+      "options": ["Opo", "Vivo", "Redmi", "Iphone"]
+    },
+    {
+      "question": "Apakah warna hp tersebut ?",
+      "options": ["Silver", "Gold", "Hitam"]
+    },
+    {
+      "question": "Apakah warna cassing hp tersebut ?",
+      "options": ["Silver", "Gold", "Hitam", "Tidak pakai cassing"]
+    }
+  ],
+  "Jam": [
+    {
+      "question": "Apakah merk jam tersebut ?",
+      "options": ["Rolex", "Eiger", "Apple Watch", "Lainnya …"]
+    },
+    {
+      "question": "Apakah warna jam tersebut ?",
+      "options": ["Silver", "Gold", "Hitam", "Lainnya …"]
+    },
+    {
+      "question": "Apakah ada bukti foto jam nya ?",
+      "options": ["Ya", "Tidak"]
+    }
+  ],
+  "Kunci": [
+    {
+      "question": "Jenis kunci apa ?",
+      "options": ["Motor", "Mobil", "Lainnya …"]
+    },
+    {
+      "question": "Ada berapakah kunci yang ada ?",
+      "options": ["1", "2", "3"]
+    },
+    {
+      "question": "Apa ciri khas kunci ?",
+      "options": ["Gantungan hello kitty", "Gantungan ultraman", "Lainnya …"]
+    }
+  ],
+  "Atribut": [
+    {
+      "question": "Jenis attribut apa ?",
+      "options": ["Tumbler", "Baju", "Sweater", "Lainnya…"]
+    },
+    {
+      "question": "Sebutkan merk attributnya ?",
+      "options": ["Tupper Ware", "Lainnya …"]
+    },
+    {
+      "question": "Sebutkan attribut spesifiknya ?",
+      "options": ["Narasi ….."]
+    }
+  ],
+  "Buku": [
+    {
+      "question": "Jenis buku apakah ?",
+      "options": ["Bacaan", "Tulisan"]
+    },
+    {
+      "question": "Apa nama buku ?",
+      "options": ["Diary/matkul", "Bumi Manusia", "Gerpolek"]
+    },
+    {
+      "question": "Tanda apakah dalam buku tersebut ?",
+      "options": ["Nama pemilik", "Sampul", "Coretan"]
+    },
+    {
+      "question": "Jika nama pemilik, apa namanya ?",
+      "options": ["Hisyam", "Zio", "Renal"]
+    }
+  ],
+  "Laptop": [
+    {
+      "question": "Apakah merk laptop tersebut ?",
+      "options": ["Asus", "Lenovo", "Hp", "Macbook"]
+    },
+    {
+      "question": "Apakah warna laptop tersebut ?",
+      "options": ["Silver", "Gold", "Hitam"]
+    },
+    {
+      "question": "Apakah warna cassing laptop tersebut ?",
+      "options": ["Silver", "Gold", "Hitam", "Tidak pakai cassing"]
+    },
+    {
+      "question": "Apa seri laptop tersebut ?",
+      "options": ["Asus MDAO14", "MACBOOK A", "Lenovo Thinkingpad"]
+    }
+  ]
+}
