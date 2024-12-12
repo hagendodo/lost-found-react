@@ -98,7 +98,7 @@ function ClaimHistoryPage() {
                       {claim.status}
                     </span>
                   </p>
-                  {claim.status === "approved" && claim.userEmail && (
+                  {claim.status === "approved" && (
                     <p className="mt-2">
                       <strong>Kontak Penemu:</strong>{" "}
                       <span className="text-blue-600">

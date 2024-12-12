@@ -14,6 +14,81 @@ import {
 import { addDays, format } from "date-fns";
 import { onAuthStateChanged } from "firebase/auth";
 import NavbarComponent from "./NavbarComponent";
+import { Navigate } from "react-router-dom";
+
+const QuizModal = ({ answers, onSubmit, onClose }) => {
+  const [userAnswers, setUserAnswers] = useState({});
+
+  // Handle selection of answers
+  const handleAnswerChange = (questionIndex, value) => {
+    setUserAnswers((prev) => ({
+      ...prev,
+      [questionIndex]: value,
+    }));
+  };
+
+  // Calculate the score and submit
+  const handleSubmit = () => {
+    let correctCount = 0;
+
+    answers.forEach((item, index) => {
+      if (userAnswers[index] === item.selectedAnswer) {
+        correctCount += 1;
+      }
+    });
+
+    const totalQuestions = answers.length;
+    const percentageScore = (correctCount / totalQuestions) * 100;
+
+    onSubmit(percentageScore);
+  };
+
+  return (
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="bg-white p-6 rounded-lg w-96">
+        <h2 className="text-xl font-bold mb-4">Answer the Questions</h2>
+
+        <div className="space-y-4">
+          {answers.map((item, index) => (
+            <div key={index} className="mb-4">
+              <p className="font-medium">{item.question}</p>
+              <div className="space-y-2">
+                {item.options.map((option, optIndex) => (
+                  <label key={optIndex} className="block">
+                    <input
+                      type="radio"
+                      name={`question-${index}`}
+                      value={option}
+                      checked={userAnswers[index] === option}
+                      onChange={() => handleAnswerChange(index, option)}
+                      className="mr-2"
+                    />
+                    {option}
+                  </label>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="flex justify-end space-x-2 mt-4">
+          <button
+            className="px-4 py-2 bg-gray-300 rounded-lg"
+            onClick={onClose}
+          >
+            Cancel
+          </button>
+          <button
+            className="px-4 py-2 bg-teal-600 text-white rounded-lg"
+            onClick={handleSubmit}
+          >
+            Submit
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 function SearchPage() {
   const [jenis_barang, setJenisBarang] = useState("");
@@ -23,6 +98,9 @@ function SearchPage() {
   const [userId, setUserId] = useState(null);
   const [user, setUser] = useState(null);
   const [hasReported, setHasReported] = useState(false);
+  const [isQuizOpen, setIsQuizOpen] = useState(false);
+  const [quizScore, setQuizScore] = useState(0);
+  const [currentItem, setCurrentItem] = useState(null);
 
   // Handle user authentication state
   useEffect(() => {
@@ -88,29 +166,45 @@ function SearchPage() {
     }
   };
 
-  const handleClaimApproval = async (itemId, lostItemId) => {
-    try {
-      const itemDocRef = doc(db, "barang_temuan", itemId);
-      await updateDoc(itemDocRef, {
-        claims: arrayUnion({
-          user_id: userId,
-          claim_date: new Date(),
-          status: "approved",
-        }),
-      });
+  const handleClaimApproval = (item) => {
+    setCurrentItem(item);
+    setIsQuizOpen(true);
+  };
 
-      // Remove the reported lost item
-      const lostItemDocRef = doc(db, "lost_items", lostItemId);
-      await deleteDoc(lostItemDocRef);
+  const handleQuizSubmit = async (score) => {
+    setIsQuizOpen(false);
 
-      alert("Claim approved and lost item removed successfully.");
-    } catch (error) {
-      console.error("Error approving claim:", error);
+    if (score >= 80) {
+      try {
+        const itemDocRef = doc(db, "barang_temuan", currentItem.id);
+        await updateDoc(itemDocRef, {
+          claims: arrayUnion({
+            user_id: userId,
+            claim_date: new Date(),
+            status: "approved",
+          }),
+        });
+
+        alert("Claim approved");
+        window.location.href = "/claims";
+      } catch (error) {
+        console.error("Error approving claim:", error);
+      }
+    } else {
+      alert("Your answers were not sufficient to approve the claim.");
     }
   };
 
   return (
     <div className="container md: mx-auto md:p-4">
+      {isQuizOpen && currentItem && (
+        <QuizModal
+          answers={currentItem.answers}
+          onSubmit={handleQuizSubmit}
+          onClose={() => setIsQuizOpen(false)}
+        />
+      )}
+
       <NavbarComponent user={user} />
       <div className="px-4">
         <h1 className="text-2xl font-semibold mb-4">Search Items</h1>
@@ -189,9 +283,7 @@ function SearchPage() {
                       />
                     )}
                     <button
-                      onClick={() =>
-                        handleClaimApproval(item.id, item.lostItemId)
-                      }
+                      onClick={() => handleClaimApproval(item)}
                       className="mt-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
                     >
                       Approve Claim

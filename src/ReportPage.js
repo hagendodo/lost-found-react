@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { db, storage, auth } from "./firebaseConfig";
-import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  where,
+  getDoc,
+  doc,
+} from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { onAuthStateChanged } from "firebase/auth";
 import questionTemplates from "./questionsTemplate.json"; // Import the template JSON
@@ -23,15 +31,27 @@ function ReportPage() {
 
   // Handle user authentication state
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
-        setUser(currentUser);
         setUserId(currentUser.uid);
+
+        try {
+          const userDocRef = doc(db, "data_users", currentUser.uid);
+          const userDoc = await getDoc(userDocRef);
+          currentUser.whatsapp = userDoc.exists()
+            ? userDoc.data().whatsapp
+            : null;
+        } catch (error) {
+          console.error("Error fetching user document:", error);
+        }
+
+        setUser(currentUser);
       } else {
         setUser(null);
         setUserId(null);
       }
     });
+
     return () => unsubscribe();
   }, []);
 
