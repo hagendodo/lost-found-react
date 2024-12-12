@@ -188,6 +188,15 @@ function SearchPage() {
         alert("Claim approved");
         window.location.href = "/claims";
       } catch (error) {
+        const itemDocRef = doc(db, "barang_temuan", currentItem.id);
+        await updateDoc(itemDocRef, {
+          claims: arrayUnion({
+            user_id: userId,
+            claim_date: new Date(),
+            status: "declined",
+          }),
+        });
+        window.location.href = "/search";
         console.error("Error approving claim:", error);
       }
     } else {

@@ -102,9 +102,9 @@ function ClaimHistoryPage() {
                     <p className="mt-2">
                       <strong>Kontak Penemu:</strong>{" "}
                       <span className="text-blue-600">
-                        {claim.whatsapp ? (
+                        {claim.userWhatsapp ? (
                           <a
-                            href={`https://wa.me/+62${claim.whatsapp.substring(
+                            href={`https://wa.me/+62${claim.userWhatsapp.substring(
                               1
                             )}`}
                             target="_blank"
