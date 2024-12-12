@@ -96,10 +96,9 @@ function App() {
         }
 
         setUser(currentUser);
-
-        setFetching(false);
       }
     });
+    setFetching(false);
     return () => unsubscribe();
   }, []);
 
