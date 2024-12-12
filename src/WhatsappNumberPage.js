@@ -21,6 +21,7 @@ function WhatsAppNumberPage({ user, setHasWhatsApp }) {
       });
       setHasWhatsApp(true);
       alert("WhatsApp number saved successfully.");
+      window.location.href = "/";
     } catch (error) {
       console.error("Error saving WhatsApp number:", error);
       alert("Failed to save WhatsApp number.");
