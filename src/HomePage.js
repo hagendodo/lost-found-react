@@ -12,7 +12,7 @@ function HomePage() {
             Your trusted platform to report, claim, and manage lost or found
             items.
           </p>
-          <div className="space-x-4">
+          <div className="flex flex-col gap-2">
             <Link
               to="/report"
               className="px-6 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition"
@@ -27,13 +27,13 @@ function HomePage() {
             </Link>
             <Link
               to="/search"
-              className="px-6 py-2 bg-gray-200 text-teal-600 rounded-lg hover:bg-gray-300 transition"
+              className="px-6 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition"
             >
               Cari barang hilang?
             </Link>
             <Link
               to="/claims"
-              className="px-6 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition"
+              className="px-6 py-2 bg-gray-200 text-teal-600 rounded-lg hover:bg-gray-300 transition"
             >
               Riwayat
             </Link>
