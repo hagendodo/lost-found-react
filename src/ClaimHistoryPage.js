@@ -101,7 +101,18 @@ function ClaimHistoryPage() {
                   {claim.status === "approved" && claim.userEmail && (
                     <p className="mt-2">
                       <strong>Kontak Penemu:</strong>{" "}
-                      <span className="text-blue-600">{claim.userEmail}</span>
+                      <span className="text-blue-600">
+                        {claim.whatsapp ? (
+                          <a
+                            href={`https://wa.me/+62${claim.whatsapp.substring(
+                              1
+                            )}`}
+                            target="_blank"
+                          ></a>
+                        ) : (
+                          claim.userEmail
+                        )}
+                      </span>
                     </p>
                   )}
                 </li>

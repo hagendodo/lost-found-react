@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { db, auth } from "./firebaseConfig";
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import { collection, addDoc, getDocs, where, query } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import NavbarComponent from "./NavbarComponent";
 
@@ -17,12 +17,16 @@ function ReportLostItemPage() {
   const lostItemsCollection = collection(db, "lost_items");
 
   useEffect(() => {
+    const fetchData = async (user) => {
+      const querySnapshot = await getDocs(
+        query(lostItemsCollection, where("user_id", "==", user.uid))
+      );
+      setData(querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
+
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      if (currentUser) {
-        setUser(currentUser);
-      } else {
-        setUser(null);
-      }
+      fetchData(currentUser);
+      setUser(currentUser);
     });
     return () => unsubscribe();
   }, []);
@@ -66,14 +70,6 @@ function ReportLostItemPage() {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const dataSnapshot = await getDocs(lostItemsCollection);
-      setData(dataSnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    };
-    fetchData();
-  }, []);
 
   return (
     <div className="container md:mx-auto md:p-4">

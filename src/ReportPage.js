@@ -132,6 +132,7 @@ function ReportPage() {
         lokasi_ditemukan: lokasiDitemukan,
         userId,
         userEmail: user.email,
+        userWhatsapp: user.whatsapp || null,
         answers,
       });
 

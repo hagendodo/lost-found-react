@@ -31,6 +31,7 @@ function SearchPage() {
         setUser(currentUser);
         setUserId(currentUser.uid);
         checkUserReportStatus(currentUser.uid);
+        console.log(currentUser);
       } else {
         setUser(null);
         setUserId(null);
