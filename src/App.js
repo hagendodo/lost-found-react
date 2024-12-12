@@ -7,30 +7,54 @@ import {
   Routes,
   Navigate,
 } from "react-router-dom";
+import { db } from "./firebaseConfig";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import SearchPage from "./SearchPage";
 import ReportPage from "./ReportPage";
 import HomePage from "./HomePage";
 import ReportLostItemPage from "./ReportLostItemPage";
 import ClaimHistoryPage from "./ClaimHistoryPage";
+import WhatsAppNumberPage from "./WhatsappNumberPage";
 
 function App() {
   const [user, setUser] = useState(null);
+  const [hasWhatsApp, setHasWhatsApp] = useState(false);
+  const [fetching, setFetching] = useState(true);
 
   const login = async () => {
     try {
-      // Set 'prompt' to 'select_account' to always show account picker
       googleProvider.setCustomParameters({
         prompt: "select_account",
       });
 
       const result = await signInWithPopup(auth, googleProvider);
       const emailDomain = result.user.email.split("@")[1];
-      if (emailDomain !== "student.uinsgd.ac.id") {
-        alert("Only emails from student.uinsgd.ac.id are allowed!");
-        await signOut(auth);
+      // if (emailDomain !== "student.uinsgd.ac.id") {
+      //   alert("Only emails from student.uinsgd.ac.id are allowed!");
+      //   await signOut(auth);
+      // } else {
+      //   const userDocRef = doc(db, "data_users", result.user.uid);
+      //   const userDoc = await getDoc(userDocRef);
+
+      //   if (userDoc.exists() && userDoc.data().whatsapp) {
+      //     setHasWhatsApp(true);
+      //   } else {
+      //     setHasWhatsApp(false);
+      //   }
+
+      //   setUser(result.user);
+      // }
+
+      const userDocRef = doc(db, "data_users", result.user.uid);
+      const userDoc = await getDoc(userDocRef);
+
+      if (userDoc.exists() && userDoc.data().whatsapp) {
+        setHasWhatsApp(true);
       } else {
-        setUser(result.user);
+        setHasWhatsApp(false);
       }
+
+      setUser(result.user);
     } catch (error) {
       console.error("Login failed:", error);
     }
@@ -39,17 +63,30 @@ function App() {
   const logout = () => {
     signOut(auth);
     setUser(null);
+    setHasWhatsApp(false);
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    setFetching(true);
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
         const emailDomain = currentUser.email.split("@")[1];
         if (emailDomain === "student.uinsgd.ac.id") {
+          const userDocRef = doc(db, "data_users", currentUser.uid);
+          const userDoc = await getDoc(userDocRef);
+
+          if (userDoc.exists() && userDoc.data().whatsapp) {
+            setHasWhatsApp(true);
+          } else {
+            setHasWhatsApp(false);
+          }
+
           setUser(currentUser);
         } else {
           signOut(auth);
         }
+
+        setFetching(false);
       }
     });
     return () => unsubscribe();
@@ -62,12 +99,16 @@ function App() {
           Lost Found FST
         </h1>
         {!user ? (
-          <button
-            onClick={login}
-            className="px-6 py-3 bg-teal-600 text-white rounded-lg shadow-md hover:bg-teal-700"
-          >
-            Login with Google Student Account
-          </button>
+          !fetching ? (
+            <button
+              onClick={login}
+              className="px-6 py-3 bg-teal-600 text-white rounded-lg shadow-md hover:bg-teal-700"
+            >
+              Login with Google Student Account
+            </button>
+          ) : (
+            <></>
+          )
         ) : (
           <button
             onClick={logout}
@@ -82,59 +123,74 @@ function App() {
               path="/"
               element={
                 user ? (
-                  <HomePage />
-                ) : (
+                  hasWhatsApp ? (
+                    <HomePage />
+                  ) : (
+                    <Navigate to="/add-whatsapp" />
+                  )
+                ) : !fetching ? (
                   <div className="text-center text-gray-700 mt-4">
                     <p>Please log in to access the page.</p>
                   </div>
+                ) : (
+                  <></>
                 )
               }
             />
             <Route
               path="/claims"
               element={
-                user ? (
+                user && hasWhatsApp ? (
                   <ClaimHistoryPage />
                 ) : (
-                  <div className="text-center text-gray-700 mt-4">
-                    <p>Please log in to access the page.</p>
-                  </div>
+                  <Navigate to="/add-whatsapp" />
                 )
               }
             />
             <Route
               path="/report-lost-item"
               element={
-                user ? (
-                  <ReportLostItemPage />
+                !fetching ? (
+                  user && hasWhatsApp ? (
+                    <ReportLostItemPage />
+                  ) : (
+                    <Navigate to="/add-whatsapp" />
+                  )
                 ) : (
-                  <div className="text-center text-gray-700 mt-4">
-                    <p>Please log in to access the page.</p>
-                  </div>
+                  <></>
                 )
               }
             />
             <Route
               path="/report"
               element={
-                user ? (
+                user && hasWhatsApp ? (
                   <ReportPage />
                 ) : (
-                  <div className="text-center text-gray-700 mt-4">
-                    <p>Please log in to access the page.</p>
-                  </div>
+                  <Navigate to="/add-whatsapp" />
                 )
               }
             />
             <Route
               path="/search"
               element={
-                user ? (
+                user && hasWhatsApp ? (
                   <SearchPage />
                 ) : (
-                  <div className="text-center text-gray-700 mt-4">
-                    <p>Please log in to access the page.</p>
-                  </div>
+                  <Navigate to="/add-whatsapp" />
+                )
+              }
+            />
+            <Route
+              path="/add-whatsapp"
+              element={
+                user ? (
+                  <WhatsAppNumberPage
+                    user={user}
+                    setHasWhatsApp={setHasWhatsApp}
+                  />
+                ) : (
+                  <Navigate to="/" />
                 )
               }
             />

@@ -16,6 +16,7 @@ export default function NavbarComponent({ user }) {
             }
             alt="User profile"
             className="w-10 h-10 rounded-full border-2 border-white"
+            referrerPolicy="no-referrer"
           />
           <span className="text-sm">
             {user.displayName || "No Name Provided"}

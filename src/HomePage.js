@@ -17,19 +17,25 @@ function HomePage() {
               to="/report"
               className="px-6 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition"
             >
-              Report Found Item
+              Menemukan Barang?
+            </Link>
+            <Link
+              to="/report-lost-item"
+              className="px-6 py-2 bg-gray-200 text-teal-600 rounded-lg hover:bg-gray-300 transition"
+            >
+              Laporkan kehilangan barang
             </Link>
             <Link
               to="/search"
               className="px-6 py-2 bg-gray-200 text-teal-600 rounded-lg hover:bg-gray-300 transition"
             >
-              Search Lost Items
+              Cari barang hilang?
             </Link>
             <Link
               to="/claims"
               className="px-6 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition"
             >
-              Claim History
+              Riwayat
             </Link>
           </div>
         </div>
