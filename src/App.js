@@ -71,20 +71,31 @@ function App() {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
         const emailDomain = currentUser.email.split("@")[1];
-        if (emailDomain === "student.uinsgd.ac.id") {
-          const userDocRef = doc(db, "data_users", currentUser.uid);
-          const userDoc = await getDoc(userDocRef);
+        // if (emailDomain === "student.uinsgd.ac.id") {
+        //   const userDocRef = doc(db, "data_users", currentUser.uid);
+        //   const userDoc = await getDoc(userDocRef);
 
-          if (userDoc.exists() && userDoc.data().whatsapp) {
-            setHasWhatsApp(true);
-          } else {
-            setHasWhatsApp(false);
-          }
+        //   if (userDoc.exists() && userDoc.data().whatsapp) {
+        //     setHasWhatsApp(true);
+        //   } else {
+        //     setHasWhatsApp(false);
+        //   }
 
-          setUser(currentUser);
+        //   setUser(currentUser);
+        // } else {
+        //   signOut(auth);
+        // }
+
+        const userDocRef = doc(db, "data_users", currentUser.uid);
+        const userDoc = await getDoc(userDocRef);
+
+        if (userDoc.exists() && userDoc.data().whatsapp) {
+          setHasWhatsApp(true);
         } else {
-          signOut(auth);
+          setHasWhatsApp(false);
         }
+
+        setUser(currentUser);
 
         setFetching(false);
       }
