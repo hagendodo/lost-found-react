@@ -43,9 +43,12 @@ function ClaimHistoryPage() {
             item_location: item.lokasi_ditemukan,
             item_date: item.tanggal_ditemukan,
             owner_contact: item.owner_contact, // Include contact information
+            userWhatsapp: item.userWhatsapp,
           });
         });
       });
+
+      console.log(userClaims);
 
       setClaims(userClaims);
     } catch (error) {
@@ -102,16 +105,14 @@ function ClaimHistoryPage() {
                     <p className="mt-2">
                       <strong>Kontak Penemu:</strong>{" "}
                       <span className="text-blue-600">
-                        {claim.userWhatsapp ? (
-                          <a
-                            href={`https://wa.me/+62${claim.userWhatsapp.substring(
-                              1
-                            )}`}
-                            target="_blank"
-                          ></a>
-                        ) : (
-                          claim.userEmail
-                        )}
+                        <a
+                          href={`https://wa.me/+62${claim.userWhatsapp.substring(
+                            1
+                          )}`}
+                          target="_blank"
+                        >
+                          {claim.userWhatsapp}
+                        </a>
                       </span>
                     </p>
                   )}

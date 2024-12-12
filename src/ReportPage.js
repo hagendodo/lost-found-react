@@ -410,7 +410,8 @@ function ReportPage() {
                               className="bg-gray-100 p-2 rounded-md border"
                             >
                               <p className="text-sm">
-                                <strong>User ID:</strong> {claim.user_id}
+                                <strong>Kontak yang mengklaim:</strong>{" "}
+                                {claim.user_email}
                               </p>
                               <p className="text-sm">
                                 <strong>Date:</strong>{" "}
