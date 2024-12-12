@@ -76,9 +76,9 @@ function ReportLostItemPage() {
   }, []);
 
   return (
-    <div className="container mx-auto p-4">
-      <div>
-        <NavbarComponent user={user} />
+    <div className="container md:mx-auto md:p-4">
+      <NavbarComponent user={user} />
+      <div className="px-4">
         <h1 className="text-2xl font-semibold mb-4">Report Lost Item</h1>
         {user ? (
           <form onSubmit={handleSubmit} className="space-y-4">

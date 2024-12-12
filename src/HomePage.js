@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 
 function HomePage() {
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 flex flex-col">
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
+      <main className="container md:mx-auto md:px-4 md:py-8">
         <div className="bg-white shadow-lg rounded-lg p-6 text-center">
           <h2 className="text-3xl font-bold mb-4">Welcome to Lost & Found</h2>
           <p className="text-gray-700 mb-6">

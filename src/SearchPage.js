@@ -109,98 +109,100 @@ function SearchPage() {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container md: mx-auto md:p-4">
       <NavbarComponent user={user} />
-      <h1 className="text-2xl font-semibold mb-4">Search Items</h1>
+      <div className="px-4">
+        <h1 className="text-2xl font-semibold mb-4">Search Items</h1>
 
-      {hasReported ? (
-        <>
-          {/* Search Filters */}
-          <div className="mb-4">
-            <label className="block text-lg font-medium mb-2">
-              Choose Jenis Barang:
-            </label>
-            <select
-              value={jenis_barang}
-              onChange={(e) => setJenisBarang(e.target.value)}
-              className="p-2 border border-gray-300 rounded-lg w-full"
+        {hasReported ? (
+          <>
+            {/* Search Filters */}
+            <div className="mb-4">
+              <label className="block text-lg font-medium mb-2">
+                Choose Jenis Barang:
+              </label>
+              <select
+                value={jenis_barang}
+                onChange={(e) => setJenisBarang(e.target.value)}
+                className="p-2 border border-gray-300 rounded-lg w-full"
+              >
+                <option value="">Select Jenis Barang</option>
+                <option value="Dompet">Dompet</option>
+                <option value="Tas">Tas</option>
+                <option value="Hp">Hp</option>
+                <option value="Kunci">Kunci</option>
+                <option value="Atribut">Atribut</option>
+                <option value="Buku">Buku</option>
+                <option value="Laptop">Laptop</option>
+                <option value="Lainnya">Lainnya</option>
+              </select>
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-lg font-medium mb-2">
+                Select Lost Date:
+              </label>
+              <input
+                type="date"
+                value={lostDate}
+                onChange={(e) => setLostDate(e.target.value)}
+                className="p-2 border border-gray-300 rounded-lg w-full"
+              />
+            </div>
+
+            <button
+              onClick={handleSearch}
+              className="px-6 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700"
+              disabled={loading}
             >
-              <option value="">Select Jenis Barang</option>
-              <option value="Dompet">Dompet</option>
-              <option value="Tas">Tas</option>
-              <option value="Hp">Hp</option>
-              <option value="Kunci">Kunci</option>
-              <option value="Atribut">Atribut</option>
-              <option value="Buku">Buku</option>
-              <option value="Laptop">Laptop</option>
-              <option value="Lainnya">Lainnya</option>
-            </select>
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-lg font-medium mb-2">
-              Select Lost Date:
-            </label>
-            <input
-              type="date"
-              value={lostDate}
-              onChange={(e) => setLostDate(e.target.value)}
-              className="p-2 border border-gray-300 rounded-lg w-full"
-            />
-          </div>
-
-          <button
-            onClick={handleSearch}
-            className="px-6 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700"
-            disabled={loading}
-          >
-            {loading ? "Searching..." : "Search"}
-          </button>
-        </>
-      ) : (
-        <p className="text-red-500">
-          You must report a lost item before you can search. Please go to the
-          report page to register your lost item.{" "}
-          <a href="/report-lost-item" className="underline">
-            Report a lost item
-          </a>
-        </p>
-      )}
-
-      {/* Search Results */}
-      <div className="mt-6">
-        {loading ? (
-          <p>Loading...</p>
+              {loading ? "Searching..." : "Search"}
+            </button>
+          </>
         ) : (
-          <ul className="space-y-4">
-            {items.length > 0 ? (
-              items.map((item) => (
-                <li key={item.id} className="border-b py-2">
-                  <h3 className="font-medium">{item.nama_barang}</h3>
-                  <p>Lokasi Ditemukan: {item.lokasi_ditemukan}</p>
-                  <p>Tanggal Ditemukan: {item.tanggal_ditemukan}</p>
-                  {item.foto_barang && (
-                    <img
-                      src={item.foto_barang}
-                      alt="Item"
-                      className="mt-2 w-32 h-32 object-cover"
-                    />
-                  )}
-                  <button
-                    onClick={() =>
-                      handleClaimApproval(item.id, item.lostItemId)
-                    }
-                    className="mt-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
-                  >
-                    Approve Claim
-                  </button>
-                </li>
-              ))
-            ) : (
-              <p>No items found.</p>
-            )}
-          </ul>
+          <p className="text-red-500">
+            You must report a lost item before you can search. Please go to the
+            report page to register your lost item.{" "}
+            <a href="/report-lost-item" className="underline">
+              Report a lost item
+            </a>
+          </p>
         )}
+
+        {/* Search Results */}
+        <div className="mt-6">
+          {loading ? (
+            <p>Loading...</p>
+          ) : (
+            <ul className="space-y-4">
+              {items.length > 0 ? (
+                items.map((item) => (
+                  <li key={item.id} className="border-b py-2">
+                    <h3 className="font-medium">{item.nama_barang}</h3>
+                    <p>Lokasi Ditemukan: {item.lokasi_ditemukan}</p>
+                    <p>Tanggal Ditemukan: {item.tanggal_ditemukan}</p>
+                    {item.foto_barang && (
+                      <img
+                        src={item.foto_barang}
+                        alt="Item"
+                        className="mt-2 w-32 h-32 object-cover"
+                      />
+                    )}
+                    <button
+                      onClick={() =>
+                        handleClaimApproval(item.id, item.lostItemId)
+                      }
+                      className="mt-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                    >
+                      Approve Claim
+                    </button>
+                  </li>
+                ))
+              ) : (
+                <p>No items found.</p>
+              )}
+            </ul>
+          )}
+        </div>
       </div>
     </div>
   );

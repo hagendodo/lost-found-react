@@ -104,10 +104,17 @@ function App() {
 
   return (
     <Router>
-      <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-6">
-        <h1 className="text-4xl font-bold text-teal-600 mb-8">
-          Lost Found FST
-        </h1>
+      <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center md:p-6">
+        <div className="mt-2 flex flex-col items-center">
+          <img
+            src="https://fst.uinsgd.ac.id/wp-content/uploads/2020/05/cropped-logo-uin.png"
+            alt="LOGO FST UIN SGD"
+            className="w-20 h-auto"
+          />
+          <h1 className="text-4xl font-bold text-teal-600 mb-8">
+            Lost Found FST
+          </h1>
+        </div>
         {!user ? (
           !fetching ? (
             <button
