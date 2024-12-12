@@ -411,7 +411,14 @@ function ReportPage() {
                             >
                               <p className="text-sm">
                                 <strong>Kontak yang mengklaim:</strong>{" "}
-                                {claim.user_email}
+                                <a
+                                  href={`https://wa.me/+62${claim.userWhatsapp.substring(
+                                    1
+                                  )}`}
+                                  target="_blank"
+                                >
+                                  {claim.userWhatsapp}
+                                </a>
                               </p>
                               <p className="text-sm">
                                 <strong>Date:</strong>{" "}
