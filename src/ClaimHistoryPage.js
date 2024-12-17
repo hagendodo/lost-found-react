@@ -87,13 +87,10 @@ function ClaimHistoryPage() {
                     ).toLocaleDateString()}
                   </p>
                   <p>
-                    <strong>Score:</strong> {claim.score}%
-                  </p>
-                  <p>
                     <strong>Status:</strong>{" "}
                     <span
                       className={
-                        claim.status === "approved"
+                        claim.status !== "declined"
                           ? "text-green-600 font-semibold"
                           : "text-red-600 font-semibold"
                       }
@@ -101,7 +98,7 @@ function ClaimHistoryPage() {
                       {claim.status}
                     </span>
                   </p>
-                  {claim.status === "approved" && (
+                  {claim.status !== "declined" && (
                     <p className="mt-2">
                       <strong>Kontak Penemu:</strong>{" "}
                       <span className="text-blue-600">

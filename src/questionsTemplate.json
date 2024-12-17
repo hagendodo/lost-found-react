@@ -88,7 +88,7 @@
     },
     {
       "question": "Sebutkan attribut spesifiknya ?",
-      "options": ["Narasi ….."]
+      "options": ["Narasi …. ", "atribut 2", "Lainnya …"]
     }
   ],
   "Buku": [
@@ -124,7 +124,7 @@
     },
     {
       "question": "Apa seri laptop tersebut ?",
-      "options": ["Asus MDAO14", "MACBOOK A", "Lenovo Thinkingpad"]
+      "options": ["Asus Vivobook", "Apple MACBOOK", "Lenovo Thinkpad"]
     }
   ]
 }

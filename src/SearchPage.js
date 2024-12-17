@@ -101,23 +101,44 @@ function SearchPage() {
   const [isQuizOpen, setIsQuizOpen] = useState(false);
   const [quizScore, setQuizScore] = useState(0);
   const [currentItem, setCurrentItem] = useState(null);
+  const [whatsapp, setWhatsApp] = useState("");
 
   // Handle user authentication state
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      if (currentUser) {
-        setUser(currentUser);
-        setUserId(currentUser.uid);
-        checkUserReportStatus(currentUser.uid);
-        console.log(currentUser);
-      } else {
-        setUser(null);
-        setUserId(null);
-        setHasReported(false);
-      }
+      const fetchUserData = async () => {
+        if (currentUser) {
+          setUser(currentUser);
+          setUserId(currentUser.uid);
+          await checkUserReportStatus(currentUser.uid);
+
+          try {
+            // Fetch WhatsApp data
+            const userDocRef = doc(db, "data_users", currentUser.uid);
+            const userDoc = await getDoc(userDocRef);
+
+            if (userDoc.exists()) {
+              setWhatsApp(userDoc.data().whatsapp);
+            } else {
+              console.log("No user document found.");
+            }
+          } catch (error) {
+            console.error("Error fetching user document:", error);
+          }
+        } else {
+          setUser(null);
+          setUserId(null);
+          setHasReported(false);
+          setWhatsApp("");
+        }
+      };
+
+      fetchUserData();
     });
+
+    // Cleanup listener on unmount
     return () => unsubscribe();
-  }, []);
+  }, [auth, db]);
 
   const checkUserReportStatus = async (userId) => {
     try {
@@ -156,8 +177,9 @@ function SearchPage() {
         .filter(
           (item) =>
             !item.claims ||
-            !item.claims.some((claim) => claim.user_id === userId)
-        ); // Filter out items where user ID exists in claims
+            !item.claims.some((claim) => claim.status == "step2") ||
+            !item.claims.some((claim) => claim.user_id == userId)
+        );
       setItems(result);
     } catch (error) {
       console.error("Error fetching data: ", error);
@@ -181,7 +203,9 @@ function SearchPage() {
           claims: arrayUnion({
             user_id: userId,
             claim_date: new Date(),
-            status: "approved",
+            status: "step2",
+            userWhatsapp: user.whatsapp,
+            score: score,
           }),
         });
 
@@ -194,6 +218,8 @@ function SearchPage() {
             user_id: userId,
             claim_date: new Date(),
             status: "declined",
+            userWhatsapp: user.whatsapp,
+            score: score,
           }),
         });
         window.location.href = "/search";

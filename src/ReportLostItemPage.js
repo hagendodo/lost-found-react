@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { db, auth } from "./firebaseConfig";
-import { collection, addDoc, getDocs, where, query } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  where,
+  query,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import NavbarComponent from "./NavbarComponent";
 
@@ -68,6 +76,26 @@ function ReportLostItemPage() {
       alert("An error occurred while reporting the lost item.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleItemFound = async (itemId) => {
+    if (window.confirm("Are you sure this item has been found?")) {
+      try {
+        // Reference to the specific document
+        const itemRef = doc(db, "lost_items", itemId);
+
+        // Delete the document from Firestore
+        await deleteDoc(itemRef);
+
+        // Update local state instead of reloading the page
+        setData((prevData) => prevData.filter((item) => item.id !== itemId));
+
+        alert("Item successfully marked as found!");
+      } catch (error) {
+        console.error("Error marking item as found:", error);
+        alert("An error occurred while marking the item as found.");
+      }
     }
   };
 
@@ -194,6 +222,16 @@ function ReportLostItemPage() {
                     <p className="text-sm text-gray-600">
                       <strong>Deskripsi:</strong> {item.deskripsi}
                     </p>
+                  </div>
+
+                  {/* Button "Sudah ditemukan" */}
+                  <div className="mt-4 md:mt-0 md:ml-4">
+                    <button
+                      onClick={() => handleItemFound(item.id)}
+                      className="px-4 py-2 bg-green-500 text-white font-semibold rounded hover:bg-green-600 transition"
+                    >
+                      Sudah ditemukan
+                    </button>
                   </div>
                 </div>
               </div>

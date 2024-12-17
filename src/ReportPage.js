@@ -8,6 +8,8 @@ import {
   where,
   getDoc,
   doc,
+  updateDoc,
+  arrayUnion,
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { onAuthStateChanged } from "firebase/auth";
@@ -119,6 +121,25 @@ function ReportPage() {
     setDynamicQuestions(updatedQuestions);
   };
 
+  const fetchData = async () => {
+    if (!userId) return;
+
+    setLoading(true);
+    try {
+      const q = query(dataCollection, where("userId", "==", userId));
+      const dataSnapshot = await getDocs(q);
+      const fetchedData = dataSnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      setData(fetchedData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Handle form submission
   const addData = async () => {
     if (!userId) {
@@ -126,9 +147,8 @@ function ReportPage() {
       return;
     }
 
-    setLoading(true);
-
     try {
+      setLoading(true);
       let fotoUrl = "";
       if (fotoBarang) {
         const fotoRef = ref(storage, `images/${fotoBarang.name}`);
@@ -168,6 +188,7 @@ function ReportPage() {
       console.error(error);
     } finally {
       setLoading(false);
+      fetchData();
     }
   };
 
@@ -177,27 +198,28 @@ function ReportPage() {
   }, [jenisBarang]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (!userId) return;
-
-      setLoading(true);
-      try {
-        const q = query(dataCollection, where("userId", "==", userId));
-        const dataSnapshot = await getDocs(q);
-        const fetchedData = dataSnapshot.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        }));
-        setData(fetchedData);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchData();
   }, [userId]);
+
+  const handleClaimApproval = async (id) => {
+    if (window.confirm("Are you sure you want to approve this claim?")) {
+      try {
+        const itemDocRef = doc(db, "barang_temuan", id);
+
+        await updateDoc(itemDocRef, {
+          claims: arrayUnion({
+            status: "approved",
+          }),
+        });
+
+        alert("Claim approved successfully!");
+        window.location.reload();
+      } catch (error) {
+        console.error("Error approving claim:", error);
+        alert("Failed to approve the claim. Please try again.");
+      }
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -412,7 +434,7 @@ function ReportPage() {
                               <p className="text-sm">
                                 <strong>Kontak yang mengklaim:</strong>{" "}
                                 <a
-                                  href={`https://wa.me/+62${claim.userWhatsapp.substring(
+                                  href={`https://wa.me/+62${claim.userWhatsapp?.substring(
                                     1
                                   )}`}
                                   target="_blank"
@@ -432,6 +454,12 @@ function ReportPage() {
                               <p className="text-sm">
                                 <strong>Status:</strong> {claim.status}
                               </p>
+                              <button
+                                onClick={() => handleClaimApproval(claim.id)}
+                                className="mt-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                              >
+                                Approve Claim
+                              </button>
                             </div>
                           ))}
                         </div>
